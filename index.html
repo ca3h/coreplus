@@ -2,483 +2,309 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Amway Network Planner</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<title>Amway Network Planner - Sơn Võ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <style>
-:root{
-  --primary:#2563eb;--bg:#f8fafc;--card:#ffffff;
-  --text:#0f172a;--muted:#64748b;
+:root {
+    --primary: #007aff;
+    --bg: #f2f2f7;
+    --card: #ffffff;
+    --text: #000000;
+    --muted: #8e8e93;
+    --safe-top: env(safe-area-inset-top);
+    --safe-bottom: env(safe-area-inset-bottom);
 }
-*{box-sizing:border-box}
-body{
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
-               Roboto,Inter,Helvetica,Arial,sans-serif;
-}
-.header{
-  height:56px;background:var(--card);
-  display:flex;align-items:center;gap:12px;
-  padding:0 16px;font-weight:600;
-  box-shadow:0 1px 3px rgba(0,0,0,.05);
-}
-.header button{
-  padding:6px 12px;border:none;border-radius:999px;
-  background:var(--primary);color:#fff;
-  cursor:pointer;font-size:13px;
-}
-.container{max-width:1100px;margin:16px auto;padding:0 12px}
-.node{
-  background:var(--card);border-radius:14px;
-  padding:14px 16px;margin-bottom:12px;
-  box-shadow:0 4px 14px rgba(0,0,0,.04);
-}
-.node-header{display:flex;align-items:center;gap:10px}
-.toggle{width:22px;text-align:center;font-weight:600;color:var(--primary);cursor:pointer}
-.name{font-weight:600;font-size:15px;cursor:pointer}
-.actions{margin-left:auto;display:flex;gap:6px}
-.actions button{border:none;background:transparent;font-size:18px;cursor:pointer;opacity:.7}
-.node-info{
-  margin-left:32px;margin-top:8px;
-  display:grid;grid-template-columns:repeat(4,auto);
-  gap:20px;font-size:13px;color:var(--muted)
-}
-.node-info b{color:var(--text)}
-.income{cursor:pointer;position:relative}
-.tooltip{
-  position:absolute;left:0;top:120%;
-  background:#fff;border-radius:12px;
-  padding:12px;box-shadow:0 10px 30px rgba(0,0,0,.15);
-  font-size:13px;display:none;min-width:280px;z-index:20
-}
-.income:hover .tooltip{display:block}
-.tooltip div{display:flex;justify-content:space-between;margin-bottom:4px}
-.tooltip hr{border:none;border-top:1px solid #e5e7eb;margin:6px 0}
-.indent-0{margin-left:0}.indent-1{margin-left:20px}
-.indent-2{margin-left:40px}.indent-3{margin-left:60px}.indent-4{margin-left:80px}
 
-.modal{
-  position:fixed;inset:0;background:rgba(0,0,0,.4);
-  display:none;align-items:center;justify-content:center
-}
-.modal.active{display:flex}
-.modal-box{
-  background:#fff;width:92%;max-width:380px;
-  border-radius:16px;padding:18px
-}
-.field{margin-bottom:14px}
-.field label{font-size:13px;color:var(--muted)}
-.field input{width:100%;padding:10px;margin-top:4px}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-/* ===== SỬA LỖI CHECKBOX LỆCH HÀNG ===== */
-.rewards {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 10px;
+body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column; min-height: 100vh;
+}
+
+.header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: saturate(180%) blur(20px);
+    padding: calc(var(--safe-top) + 12px) 16px 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 0.5px solid #d1d1d6;
+}
+.header-title { font-weight: 700; font-size: 17px; }
+.header button {
+    padding: 6px 12px; border: none; border-radius: 8px;
+    background: var(--primary); color: #fff; font-size: 14px; font-weight: 600;
+}
+
+.container { padding: 12px; max-width: 480px; margin: 0 auto; flex: 1; width: 100%; }
+
+.node {
+    background: var(--card); border-radius: 14px; padding: 16px;
+    margin-bottom: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.indent-1 { margin-left: 12px; border-left: 2px solid #d1d1d6; }
+.indent-2 { margin-left: 24px; border-left: 2px solid #d1d1d6; }
+.indent-3 { margin-left: 36px; border-left: 2px solid #d1d1d6; }
+
+.node-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.toggle {
+    width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+    background: #e9e9eb; border-radius: 50%; color: var(--text); font-weight: 600;
+}
+.name { font-weight: 600; font-size: 17px; flex: 1; }
+
+.actions button {
+    width: 36px; height: 36px; border: none; border-radius: 10px;
+    background: #f2f2f7; font-size: 18px; color: var(--primary);
+}
+
+.node-info { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.info-box {
+    background: #ffffff; padding: 10px; border-radius: 10px; 
+    border: 0.5px solid #d1d1d6; cursor: pointer;
+}
+.info-box:active { background: #f2f2f7; }
+.info-box span { font-size: 12px; color: var(--muted); display: block; margin-bottom: 2px; }
+.info-box b { font-size: 16px; font-weight: 600; }
+
+.income-trigger { background: #f0f7ff; border-color: #007aff; }
+.income-trigger b { color: var(--primary); }
+
+.modal-overlay, .modal-edit {
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4);
+    display: none; align-items: center; justify-content: center; z-index: 1000;
+    padding: 24px; backdrop-filter: blur(4px);
+}
+.modal-edit.active { display: flex; }
+
+.floating-card, .edit-box {
+    background: #fff; width: 100%; max-width: 360px; border-radius: 20px;
+    padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.field { margin-bottom: 16px; }
+.field label { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; }
+.field input {
+    width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #d1d1d6;
+    font-size: 17px; margin-top: 6px; background: #f9f9f9;
 }
 
 .check-row {
-  display: flex;
-  align-items: center; /* Căn giữa theo chiều dọc */
-  gap: 8px;           /* Khoảng cách giữa checkbox và chữ */
-  cursor: pointer;
+    display: flex; align-items: center; gap: 12px; padding: 12px;
+    background: #f2f2f7; border-radius: 12px; font-size: 15px; margin-bottom: 8px;
 }
+.check-row input { width: 22px; height: 22px; }
 
-.check-row input[type="checkbox"] {
-  width: 18px;        /* Kích thước checkbox vừa vặn */
-  height: 18px;
-  margin: 0;          /* Xóa margin mặc định gây lệch */
-  cursor: pointer;
-}
+.modal-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+.modal-footer button { padding: 14px; border: none; border-radius: 12px; font-weight: 600; font-size: 16px; }
 
-.check-row label {
-  font-size: 14px;
-  color: var(--text);
-  cursor: pointer;
-  user-select: none;  /* Ngăn bôi đen chữ khi click nhanh */
-}
+.badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; margin-left: 4px; }
+.bg-csi { background: #34c759; color: #fff; }
+.bg-bf { background: #ffcc00; color: #000; }
+.bg-bb { background: #ff9500; color: #fff; }
 
-.modal-footer{
-  display:flex;justify-content:flex-end;gap:10px
+footer {
+    text-align: center; padding: 20px 0 calc(var(--safe-bottom) + 20px);
+    color: var(--muted); font-size: 13px; letter-spacing: -0.2px;
 }
-.modal-footer button{
-  padding:10px 18px;border:none;border-radius:999px;cursor:pointer
-}
-.btn-cancel{background:#e5e7eb}
-.btn-save{background:var(--primary);color:#fff}
-
-/* Biểu tượng báo hiệu cạnh tên NPP */
-.badge-container {
-  display: inline-flex;
-  gap: 4px;
-  margin-left: 8px;
-  vertical-align: middle;
-}
-.badge {
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-.badge-csi { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-.badge-bf { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
-.badge-bb { background: #ffedd5; color: #9a3412; border: 1px solid #fed7aa; }
-
-
 </style>
 </head>
 
 <body>
 
 <div class="header">
-  Amway Network Planner
-  <button onclick="exportExcel()">Export Excel</button>
-  <button onclick="document.getElementById('importFile').click()">Import Excel</button>
-  <input type="file" id="importFile" accept=".xlsx,.xls"
-         style="display:none" onchange="importExcel(event)">
+    <div class="header-title">Network Planner</div>
+    <div style="display:flex; gap:8px">
+        <button style="background:#e9e9eb; color:var(--primary)" onclick="exportExcel()">Xuất</button>
+        <button onclick="document.getElementById('importFile').click()">Nhập</button>
+    </div>
+    <input type="file" id="importFile" style="display:none" onchange="importExcel(event)">
 </div>
 
 <div class="container" id="tree"></div>
 
-<!-- ===== MODAL ===== -->
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <h3 id="modalTitle"></h3>
-
-    <div class="field">
-      <label>Tên NPP</label>
-      <input id="mName">
+<div id="incomeOverlay" class="modal-overlay" onclick="this.style.display='none'">
+    <div class="floating-card" onclick="event.stopPropagation()">
+        <h3 id="tipName" style="margin-top:0; font-size:18px"></h3>
+        <div id="tipBody"></div>
+        <button onclick="document.getElementById('incomeOverlay').style.display='none'" style="width:100%; margin-top:20px; padding:14px; border:none; border-radius:12px; background:var(--primary); color:#fff; font-weight:700">Xong</button>
     </div>
-
-    <div class="field">
-      <label>PV cá nhân</label>
-      <input type="number" id="mPV">
-    </div>
-
-    <div class="field">
-      <label>PV từ KHNPP</label>
-      <input type="number" id="mKH">
-    </div>
-
-<div class="field rewards">
-  <label class="check-row">
-    <input type="checkbox" id="csi">
-    <span>CSI</span>
-  </label>
-  <label class="check-row">
-    <input type="checkbox" id="bf">
-    <span>Bronze Foundation</span>
-  </label>
-  <label class="check-row">
-    <input type="checkbox" id="bb">
-    <span>Bronze Builder</span>
-  </label>
 </div>
 
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeModal()">Hủy</button>
-      <button class="btn-save" onclick="saveModal()">Lưu</button>
+<div class="modal-edit" id="modal">
+    <div class="edit-box">
+        <h3 id="modalTitle" style="margin: 0 0 20px; font-size: 19px;"></h3>
+        <div class="field"><label>Tên NPP</label><input id="mName"></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
+            <div class="field"><label>PV Cá Nhân</label><input type="number" id="mPV" pattern="\d*"></div>
+            <div class="field"><label>PV Khách</label><input type="number" id="mKH" pattern="\d*"></div>
+        </div>
+        <div class="check-group">
+            <label class="check-row"><input type="checkbox" id="csi"> <span>Thưởng CSI</span></label>
+            <label class="check-row"><input type="checkbox" id="bf"> <span>Đồng nền tảng (BF)</span></label>
+            <label class="check-row"><input type="checkbox" id="bb"> <span>Đồng xây dựng (BB)</span></label>
+        </div>
+        <div class="modal-footer">
+            <button onclick="closeModal()" style="background:#f2f2f7; color:#000">Hủy</button>
+            <button onclick="saveModal()" style="background:var(--primary); color:#fff">Lưu lại</button>
+        </div>
     </div>
-  </div>
 </div>
 
-<!-- ===== JS PHẦN LOGIC (GIỮ NGUYÊN BẢN ỔN ĐỊNH TRƯỚC ĐÓ) ===== -->
-<!-- Bạn giữ nguyên phần compute, render, import/export như đang dùng -->
- <script>
-/* ================= IMPORT / EXPORT ================= */
+<footer>
+    &copy; 2026 Developed by <strong>Sơn Võ</strong>
+</footer>
 
-// Flatten tree → array
-function flattenTree(node, arr=[]){
-  arr.push({
-    id: node.id,
-    parentId: node.parent || 0,
-    name: node.name,
-    pv: node.pv,
-    kh: node.kh,
-    csi: node.rewards.csi,
-    bf: node.rewards.bf,
-    bb: node.rewards.bb
-  });
-  node.children.forEach(c=>flattenTree(c,arr));
-  return arr;
-}
-
-function exportExcel(){
-  const rows = flattenTree(root);
-  const ws = XLSX.utils.json_to_sheet(rows);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Network");
-  XLSX.writeFile(wb, "amway_network.xlsx");
-}
-
-function importExcel(e){
-  const file = e.target.files[0];
-  if(!file) return;
-
-  const reader = new FileReader();
-  reader.onload = evt=>{
-    const data = new Uint8Array(evt.target.result);
-    const wb = XLSX.read(data,{type:"array"});
-    const sheet = wb.Sheets[wb.SheetNames[0]];
-    const rows = XLSX.utils.sheet_to_json(sheet);
-
-    buildTreeFromRows(rows);
-    render();
-  };
-  reader.readAsArrayBuffer(file);
-}
-
-// Build tree (ghi đè toàn bộ)
-function buildTreeFromRows(rows){
-  const map = {};
-  id = 1;
-
-  rows.forEach(r=>{
-    map[r.id] = {
-      id: r.id,
-      level: 0,
-      parent: r.parentId || null,
-      name: r.name,
-      pv: +r.pv || 0,
-      kh: +r.kh || 0,
-      rewards:{csi:!!r.csi,bf:!!r.bf,bb:!!r.bb},
-      children:[],
-      expanded:true
-    };
-    id = Math.max(id, r.id+1);
-  });
-
-  let newRoot = null;
-  rows.forEach(r=>{
-    if(!r.parentId){
-      newRoot = map[r.id];
-    }else{
-      map[r.parentId].children.push(map[r.id]);
-      map[r.id].level = map[r.parentId].level + 1;
-    }
-  });
-
-  root = newRoot;
-}
+<script>
+// Logic tính toán và điều khiển (giữ nguyên bản tối ưu trước đó)
+let id=1, root, mode, editNode, parentAdd;
 
 function percentByGroup(g){
-  if(g>=10000)return 21;if(g>=7000)return 15;if(g>=4000)return 12;
-  if(g>=1200)return 9;if(g>=600)return 6;if(g>=200)return 3;return 0;
+    if(g>=10000)return 21; if(g>=7000)return 15; if(g>=4000)return 12;
+    if(g>=1200)return 9; if(g>=600)return 6; if(g>=200)return 3; return 0;
 }
-
-// Hàm tạo Node với PV mặc định bằng 0
 function createNode(level, parent) {
-  return { 
-    id: id++, level, parent, name: "NPP " + id,
-    pv: 0, kh: 0, 
-    rewards: { csi: false, bf: false, bb: false },
-    children: [], expanded: true 
-  };
+    return { id: id++, level, parent, name: "NPP " + id, pv: 0, kh: 0, rewards: { csi: false, bf: false, bb: false }, children: [], expanded: true };
 }
-
-// Khởi tạo cấu trúc: 1 gốc -> 3 con level 1
 function initDefaultTree() {
-  id = 0;
-  const newRoot = createNode(0, null);
-  newRoot.name = "NPP 1";
-  for (let i = 0; i < 3; i++) {
-    newRoot.children.push(createNode(1, newRoot.id));
-  }
-  return newRoot;
+    id = 0; const r = createNode(0, null); r.name = "NPP 1";
+    for (let i = 0; i < 3; i++) r.children.push(createNode(1, r.id));
+    return r;
 }
-
 root = initDefaultTree();
 
 function compute(node) {
     const ownPV = (node.pv || 0) + (node.kh || 0);
-    
-    // 1. Đệ quy tính toán các con trước
-    node.children.forEach(child => compute(child));
-
-    // 2. Tính GPV nội bộ (Chỉ gồm cá nhân + các nhánh thực sự không tách)
+    node.children.forEach(c => compute(c));
     let internalGPV = ownPV;
-    node.children.forEach(child => {
-        if (!child.isSplit) {
-            internalGPV += child.group;
-        }
-    });
-
-    // 3. XÁC ĐỊNH TRẠNG THÁI TÁCH (isSplit)
-    // Một node được coi là tách đối với cấp trên nếu:
-    // - GPV nội bộ >= 10k
-    // - HOẶC có con đã tách và (GPV nội bộ >= 4k)
-    // - HOẶC có từ 2 con đã tách trở lên
-    // - HOẶC (QUAN TRỌNG): Tổng cụm đổ lên từ chính nó >= 10k (Roll-up)
-    
+    node.children.forEach(c => { if (!c.isSplit) internalGPV += c.group; });
     const splitChildren = node.children.filter(c => c.isSplit);
     let totalClusterPotential = internalGPV;
     splitChildren.forEach(c => { totalClusterPotential += c.group; });
-
-    node.isSplit = 
-        internalGPV >= 10000 || 
-        (splitChildren.length === 1 && internalGPV >= 4000) || 
-        (splitChildren.length >= 2) ||
-        (totalClusterPotential >= 10000 && splitChildren.length > 0);
-
-    // 4. ĐIỀU KIỆN NHẬN HHLĐ (canReceiveLB)
+    node.isSplit = internalGPV >= 10000 || (splitChildren.length === 1 && internalGPV >= 4000) || (splitChildren.length >= 2) || (totalClusterPotential >= 10000 && splitChildren.length > 0);
     const canReceiveLB = (internalGPV >= 4000 || splitChildren.length >= 2);
-
-    // 5. LOGIC TRUYỀN GIÁ TRỊ LÊN CẤP TRÊN (node.group)
-    if (node.isSplit && canReceiveLB) {
-        // Nếu đủ điều kiện nhận HHLĐ: Ngắt nhánh, chỉ truyền GPV nội bộ lên
-        node.group = internalGPV;
-    } else {
-        // Nếu không đủ đk nhận HHLĐ hoặc không tách: Truyền toàn bộ cụm lên (Roll-up)
-        node.group = totalClusterPotential;
-    }
-
-    // 6. TÍNH % THÀNH TÍCH VÀ THU NHẬP
+    node.group = (node.isSplit && canReceiveLB) ? internalGPV : totalClusterPotential;
     node.percent = node.isSplit ? 21 : percentByGroup(internalGPV);
     let maxChildPercent = 0;
     node.children.forEach(c => { maxChildPercent = Math.max(maxChildPercent, c.percent || 0); });
     node.percent = Math.max(node.percent, maxChildPercent);
-
     const perfIncome = (ownPV * node.percent / 100 * 26800);
     let diffIncome = 0;
-    node.children.forEach(child => {
-        if (!child.isSplit) {
-            diffIncome += Math.max(node.percent - child.percent, 0) / 100 * child.group * 26800;
-        }
-    });
-
-    // 7. TÍNH HHLĐ (Chỉ tính nếu thỏa canReceiveLB)
-    let leaderBonus = 0;
+    node.children.forEach(c => { if (!c.isSplit) diffIncome += Math.max(node.percent - c.percent, 0) / 100 * c.group * 26800; });
+    let lb = 0;
     if (splitChildren.length > 0 && canReceiveLB) {
-        let totalLBFromBelow = 0;
-        splitChildren.forEach(child => {
-            totalLBFromBelow += Math.max(10000, child.group) * 26800 * 0.06;
-        });
-        const deduction = (internalGPV >= 10000) ? 0 : (10000 - internalGPV) * 26800 * 0.06;
-        leaderBonus = Math.max(totalLBFromBelow - deduction, 0);
+        let lbSum = 0; splitChildren.forEach(c => lbSum += Math.max(10000, c.group) * 26800 * 0.06);
+        lb = Math.max(lbSum - ((internalGPV >= 10000) ? 0 : (10000 - internalGPV) * 26800 * 0.06), 0);
     }
-
-    // 8. CÁC THƯỞNG PHỤ (Khởi tạo 0 tránh NaN)
     let csi = 0, bf = 0, bb = 0;
-    if (node.rewards.csi && (node.pv || 0) >= 50 && node.percent <= 9) {
-        csi = (10 - node.percent) / 100 * (node.kh || 0) * 26800;
-    }
+    if (node.rewards.csi && (node.pv || 0) >= 50 && node.percent <= 9) csi = (10 - node.percent) / 100 * (node.kh || 0) * 26800;
     const baseBronze = perfIncome + diffIncome;
-    if (node.rewards.bf && node.percent >= 9 && node.children.filter(c => c.percent >= 3).length >= 3) {
-        bf = 0.15 * baseBronze;
-    }
-    if (node.rewards.bb && node.percent >= 15 && node.children.filter(c => c.percent >= 6).length >= 3) {
-        bb = 0.20 * baseBronze;
-    }
-
-    // LƯU DỮ LIỆU HIỂN THỊ
-    node.ownPV = ownPV;
-    node.displayGPV = internalGPV;
-    node.breakdown = { direct: perfIncome, diff: diffIncome, csi, bf, bb, lb: leaderBonus };
-    node.income = Math.round(perfIncome + diffIncome + csi + bf + bb + leaderBonus);
+    if (node.rewards.bf && node.percent >= 9 && node.children.filter(c => c.percent >= 3).length >= 3) bf = 0.15 * baseBronze;
+    if (node.rewards.bb && node.percent >= 15 && node.children.filter(c => c.percent >= 6).length >= 3) bb = 0.20 * baseBronze;
+    node.ownPV = ownPV; node.displayGPV = internalGPV;
+    node.breakdown = { direct: perfIncome, diff: diffIncome, csi, bf, bb, lb };
+    node.income = Math.round(perfIncome + diffIncome + csi + bf + bb + lb);
 }
 
+function render(){ compute(root); tree.innerHTML=""; draw(root); }
 
-/* ===== RENDER / MODAL (GIỮ NGUYÊN) ===== */
-function removeNode(parent,id){
-  parent.children=parent.children.filter(c=>c.id!==id);
-  parent.children.forEach(c=>removeNode(c,id));
-}
-function render(){compute(root);tree.innerHTML="";draw(root);}
 function draw(n) {
-  const el = document.createElement("div");
-  el.className = `node indent-${n.level}`;
-  
-  // Tạo html cho các biểu tượng thưởng
-  let badgesHtml = '<div class="badge-container">';
-  if (n.rewards.csi) badgesHtml += '<span class="badge badge-csi">CSI</span>';
-  if (n.rewards.bf)  badgesHtml += '<span class="badge badge-bf">BF</span>';
-  if (n.rewards.bb)  badgesHtml += '<span class="badge badge-bb">BB</span>';
-  badgesHtml += '</div>';
+    const el = document.createElement("div");
+    el.className = `node indent-${Math.min(n.level, 3)}`;
+    let bHtml = '';
+    if (n.rewards.csi) bHtml += '<span class="badge bg-csi">CSI</span>';
+    if (n.rewards.bf)  bHtml += '<span class="badge bg-bf">BF</span>';
+    if (n.rewards.bb)  bHtml += '<span class="badge bg-bb">BB</span>';
 
-  el.innerHTML = `
-  <div class="node-header">
-    <div class="toggle">${n.children.length ? (n.expanded ? "−" : "+") : ""}</div>
-    <div class="name">${n.name}</div>
-    ${badgesHtml} <div class="actions">
-      <button onclick="addNode(${n.id})">＋</button>
-      ${n !== root ? `<button onclick="deleteNode(${n.id})">🗑</button>` : ""}
+    el.innerHTML = `
+    <div class="node-header">
+        <div class="toggle" onclick="toggleNode(${n.id})">${n.children.length ? (n.expanded ? "−" : "+") : ""}</div>
+        <div class="name" onclick="openEditById(${n.id})" style="${n.percent === 21 ? 'color:var(--primary)' : ''}">${n.name}${bHtml}</div>
+        <div class="actions">
+            <button onclick="addNode(${n.id})">＋</button>
+            ${n !== root ? `<button style="color:#ff3b30" onclick="deleteNode(${n.id})">🗑</button>` : ""}
+        </div>
     </div>
-  </div>
-  <div class="node-info">
-    <span>PV: <b>${n.ownPV}</b></span>
-    <span>GTĐ nhóm: <b>${n.displayGPV.toLocaleString()}</b></span>
-    <span>% HHTT: <b>${n.percent}%</b></span>
-    <span class="income">Thu nhập: <b>${n.income.toLocaleString()} đ</b>
-      <div class="tooltip">
-        <div><span>Trực tiếp</span><span>${Math.round(n.breakdown.direct).toLocaleString()}</span></div>
-        <div><span>Chênh lệch</span><span>${Math.round(n.breakdown.diff).toLocaleString()}</span></div>
-        <div><span>CSI</span><span>${Math.round(n.breakdown.csi).toLocaleString()}</span></div>
-        <div><span>Bronze Foundation</span><span>${Math.round(n.breakdown.bf).toLocaleString()}</span></div>
-        <div><span>Bronze Builder</span><span>${Math.round(n.breakdown.bb).toLocaleString()}</span></div>
-        <div><span>Hoa hồng lãnh đạo</span><span>${Math.round(n.breakdown.lb).toLocaleString()}</span></div>
-        <hr><div><b>Tổng thu nhập</b><b>${n.income.toLocaleString()}</b></div>
-      </div>
-    </span>
-  </div>`;
-  
-  // Các sự kiện giữ nguyên
-  el.querySelector(".toggle").onclick = () => { n.expanded = !n.expanded; render(); }
-  el.querySelector(".name").onclick = () => openEdit(n);
-  tree.appendChild(el);
-  if (n.expanded) n.children.forEach(draw);
+    <div class="node-info">
+        <div class="info-box" onclick="openEditById(${n.id})"><span>PV Cá nhân</span><b>${n.ownPV}</b></div>
+        <div class="info-box" onclick="openEditById(${n.id})"><span>GTĐ Nhóm</span><b>${n.displayGPV.toLocaleString()}</b></div>
+        <div class="info-box" onclick="openEditById(${n.id})"><span>% HHTT</span><b>${n.percent}%</b></div>
+        <div class="info-box income-trigger" onclick="showIncome(${n.id})"><span>Thu nhập</span><b>${n.income.toLocaleString()} đ</b></div>
+    </div>`;
+    tree.appendChild(el);
+    if (n.expanded) n.children.forEach(draw);
 }
 
-function deleteNode(id){
-  if(confirm("Xoá NPP này và toàn bộ tuyến dưới?")){
-    removeNode(root,id);render();
-  }
+function showIncome(nid) {
+    const n = find(root, nid);
+    document.getElementById('tipName').innerText = n.name;
+    document.getElementById('tipBody').innerHTML = `
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px"><span>HHTT cá nhân</span><span>${Math.round(n.breakdown.direct).toLocaleString()}</span></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px"><span>HHTT chênh lệch</span><span>${Math.round(n.breakdown.diff).toLocaleString()}</span></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px"><span>CSI</span><span>${Math.round(n.breakdown.csi).toLocaleString()}</span></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px"><span>Thưởng BF</span><span>${Math.round(n.breakdown.bf).toLocaleString()}</span></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px"><span>Thưởng BB</span><span>${Math.round(n.breakdown.bb).toLocaleString()}</span></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px"><span>HHLĐ (6%)</span><span>${Math.round(n.breakdown.lb).toLocaleString()}</span></div>
+        <div style="display:flex; justify-content:space-between; border-top:0.5px solid #eee; padding-top:10px; font-weight:700; font-size:16px"><span>Tổng cộng</span><span>${n.income.toLocaleString()} đ</span></div>
+    `;
+    document.getElementById('incomeOverlay').style.display = 'flex';
 }
-function closeModal(){modal.classList.remove("active")}
+function closeModal(){ modal.classList.remove("active"); }
+function toggleNode(nid) { const n = find(root, nid); n.expanded = !n.expanded; render(); }
+function openEditById(nid) { openEdit(find(root, nid)); }
 function addNode(pid){
-  parentAdd=find(root,pid);mode="add";
-  modalTitle.innerText="Thêm NPP tuyến dưới";
-  mName.value="";mPV.value=0;mKH.value=0;
-  csi.checked=bf.checked=bb.checked=false;
-  modal.classList.add("active");
+    parentAdd=find(root,pid); mode="add"; modalTitle.innerText="Thêm tuyến dưới";
+    mName.value=""; mPV.value=0; mKH.value=0; csi.checked=bf.checked=bb.checked=false;
+    modal.classList.add("active");
 }
 function openEdit(n){
-  mode="edit";editNode=n;
-  modalTitle.innerText="Chỉnh thông tin NPP";
-  mName.value=n.name;mPV.value=n.pv;mKH.value=n.kh;
-  csi.checked=n.rewards.csi;
-  bf.checked=n.rewards.bf;
-  bb.checked=n.rewards.bb;
-  modal.classList.add("active");
+    mode="edit"; editNode=n; modalTitle.innerText="Chỉnh sửa NPP";
+    mName.value=n.name; mPV.value=n.pv; mKH.value=n.kh;
+    csi.checked=n.rewards.csi; bf.checked=n.rewards.bf; bb.checked=n.rewards.bb;
+    modal.classList.add("active");
 }
 function saveModal(){
-  if(mode==="add"){
-    const n=createNode(parentAdd.level+1,parentAdd.id);
-    n.name=mName.value;n.pv=+mPV.value;n.kh=+mKH.value;
-    n.rewards={csi:csi.checked,bf:bf.checked,bb:bb.checked};
-    parentAdd.children.push(n);parentAdd.expanded=true;
-  }else{
-    editNode.name=mName.value;
-    editNode.pv=+mPV.value;
-    editNode.kh=+mKH.value;
-    editNode.rewards={csi:csi.checked,bf:bf.checked,bb:bb.checked};
-  }
-  closeModal();render();
+    if(mode==="add"){
+        const n=createNode(parentAdd.level+1,parentAdd.id);
+        n.name=mName.value || "NPP"; n.pv=+mPV.value; n.kh=+mKH.value;
+        n.rewards={csi:csi.checked,bf:bf.checked,bb:bb.checked};
+        parentAdd.children.push(n); parentAdd.expanded=true;
+    }else{
+        editNode.name=mName.value; editNode.pv=+mPV.value; editNode.kh=+mKH.value;
+        editNode.rewards={csi:csi.checked,bf:bf.checked,bb:bb.checked};
+    }
+    closeModal(); render();
 }
-function find(n,i){
-  if(n.id===i)return n;
-  for(const c of n.children){const f=find(c,i);if(f)return f;}
+function deleteNode(id){ if(confirm("Xoá NPP này?")) { removeNode(root,id); render(); } }
+function removeNode(p,id){ p.children=p.children.filter(c=>c.id!==id); p.children.forEach(c=>removeNode(c,id)); }
+function find(n,i){ if(n.id===i)return n; for(const c of n.children){const f=find(c,i);if(f)return f;} }
+function exportExcel(){ 
+    const rows = [];
+    function flatten(node){
+        rows.push({id:node.id, parentId:node.parent||0, name:node.name, pv:node.pv, kh:node.kh, csi:node.rewards.csi, bf:node.rewards.bf, bb:node.rewards.bb});
+        node.children.forEach(flatten);
+    }
+    flatten(root);
+    const ws = XLSX.utils.json_to_sheet(rows); const wb = XLSX.utils.book_new(); 
+    XLSX.utils.book_append_sheet(wb, ws, "Network"); XLSX.writeFile(wb, "amway_plan.xlsx"); 
 }
-document.addEventListener("keydown",e=>{
-  if(e.key==="Escape"&&modal.classList.contains("active"))closeModal();
-  if(e.key==="Enter"&&modal.classList.contains("active"))saveModal();
-});
+function importExcel(e){
+    const f = e.target.files[0]; if(!f) return;
+    const r = new FileReader(); r.onload = evt=>{
+        const d = new Uint8Array(evt.target.result); const wb = XLSX.read(d,{type:"array"});
+        const data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+        const map = {}; id = 0;
+        data.forEach(r=>{ map[r.id] = { id:r.id, level:0, parent:r.parentId||null, name:r.name, pv:+r.pv||0, kh:+r.kh||0, rewards:{csi:!!r.csi,bf:!!r.bf,bb:!!r.bb}, children:[], expanded:true }; id=Math.max(id,r.id+1); });
+        let newRoot = null;
+        data.forEach(r=>{ if(!r.parentId) newRoot = map[r.id]; else { map[r.parentId].children.push(map[r.id]); map[r.id].level = map[r.parentId].level+1; } });
+        root = newRoot; render();
+    }; r.readAsArrayBuffer(f);
+}
 render();
-
 </script>
-
 </body>
 </html>
