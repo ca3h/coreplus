@@ -164,8 +164,8 @@ footer {
 let id=1, root, mode, editNode, parentAdd;
 
 function percentByGroup(g){
-    if(g>=10000)return 21; if(g>=7000)return 15; if(g>=4000)return 12;
-    if(g>=1200)return 9; if(g>=600)return 6; if(g>=200)return 3; return 0;
+    if(g>=10000)return 21; if(g>=7000)return 18; if(g>=4000)return 15;
+    if(g>=2400)return 12; if(g>=1200) return 9; if(g>=600)return 6; if(g>=200)return 3; return 0;
 }
 function createNode(level, parent) {
     return { id: id++, level, parent, name: "NPP " + id, pv: 0, kh: 0, rewards: { csi: false, bf: false, bb: false }, children: [], expanded: true };
